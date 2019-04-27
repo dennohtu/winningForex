@@ -1,0 +1,2 @@
+# winningForex
+forex analysing model
