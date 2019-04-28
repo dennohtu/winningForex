@@ -290,10 +290,7 @@ def OHLCresample(DataFrame, TimeFrame, colums='ask'):
   :param: column: column we are resampling (bid or ask)
   :return: resampled dict of data for the given timeframe
   """
-  try:
-    grouped = DataFrame.groupby('Symbol')
-  except:
-    grouped = DataFrame
+  grouped = DataFrame.groupby('Symbol')
 
   if np.any(DataFrame.columns == 'Ask'):
     if column == 'ask':
@@ -303,7 +300,7 @@ def OHLCresample(DataFrame, TimeFrame, colums='ask'):
       resampled['volume'] = askVol
       resampled = resampled.dropna()
       return resampled
-    elif column =='Bid':
+    elif column =='bid':
       bid = grouped['Bid'].resample(TimeFrame).ohlc()
       bidVol = gouped['volume'].resample(TimeFrame).count()
       resampled = pd.DataFrame(bid)
@@ -311,7 +308,7 @@ def OHLCresample(DataFrame, TimeFrame, colums='ask'):
       resampled = resampled.dropna()
       return resampled
     else:
-      raise ValueError('column must be either as or bid')
+      raise ValueError('column must be either ask or bid')
   elif np.any(DataFrame.columns == 'close'):
     open = grouped['open'].resample(TimeFrame).ohlc()
     close = grouped['close'].resample(TimeFrame).ohlc()
