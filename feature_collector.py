@@ -81,7 +81,7 @@ for i in range(0, len(resList)):
         masterFrame[colId] = resList[i]
     else:
         for j in keyList[i]:
-            for k in (list(resList[i][j])):
+            for k in list(resList[i][j]):
                 colId = colFeat[i] + str(j) + k
 
                 masterFrame[colId] = resList[i][j][k]
