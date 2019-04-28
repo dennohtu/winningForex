@@ -6,7 +6,7 @@ from feature_functions import *
 data = pd.read_csv('Data/EURUSDHR.csv')
 data.columns = ['date','open','high','low','close','volume']
 data = data.set_index(pd.to_datetime(data.date))
-data.columns = ['open','high','low','close','volume']
+data = data[['open','high','low','close','volume']]
 
 prices = data.drop_duplicates(keep=False)
 
@@ -77,6 +77,30 @@ masterFrame = pd.DataFrame(index=prices.index)
 
 for i in range(0, len(resList)):
     if colFeat[i] == 'macd':
-        colId = colFeat[i] + str(keyList[6][0] + str(keyList[6][1]))
+        colId = colFeat[i] + str(keyList[6][0]) + str(keyList[6][0])
         masterFrame[colId] = resList[i]
-        
+    else:
+        for j in keyList[i]:
+            for k in (list(resList[i][j])):
+                colId = colFeat[i] + str(j) + k
+
+                masterFrame[colId] = resList[i][j][k]
+
+threshold = round(0.7*len(masterFrame))
+
+masterFrame[['open','high','low','close']] = prices[['open','high','low','close']]
+
+##heikenashi is resampled ==> has empty data between
+masterFrame.heiken15open = masterFrame.heiken15open.fillna(method='ffill')
+masterFrame.heiken15close = masterFrame.heiken15close.fillna(method='ffill')
+masterFrame.heiken15high = masterFrame.heiken15high.fillna(method='ffill')
+masterFrame.heiken15low = masterFrame.heiken15low.fillna(method='ffill')
+
+##Drop columns with > 30% null data
+masterFrameCleaned = masterFrame.copy()
+
+masterFrameCleaned = masterFrameCleaned.dropna(axis=1, thresh=threshold)
+masterFrameCleaned = masterFrameCleaned.dropna(axis=0)
+
+masterFrameCleaned.tocsv('Data/masterFrame.csv')
+print('Feature calculations complete')

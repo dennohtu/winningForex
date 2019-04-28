@@ -57,7 +57,7 @@ def heikenashi(prices, periods):
   
   df.columns = ['open', 'high', 'close', 'low'] #insurance
   
-  #df.index = df.index.droplevel(0)
+  df.index = df.index.droplevel(0)
   
   dict[periods[0]] = df
   
@@ -133,7 +133,7 @@ def fourier(prices, periods, method='difference'):
   results = holder()
   dict = {}
 
-  plot = True
+  plot = False
 
   #compute series coefficients
 
@@ -166,9 +166,9 @@ def fourier(prices, periods, method='difference'):
       coeffs = np.append(coeffs, res[0], axis=0)
     warnings.filterwarnings('ignore', category=np.VisibleDeprecationWarning)
 
-    coeffs = np.array(coeffs).reshape(((len(coeffs)/4,4)))
+    coeffs = np.array(coeffs).reshape(((len(coeffs)//4,4)))
 
-    df = pd.DataFrame(coeffs, index=prices.iloc[periods[i]-periods[i]])
+    df = pd.DataFrame(coeffs, index=prices.iloc[periods[i]:-periods[i]])
 
     df.columns = ['a0', 'a1', 'b1', 'w']
 
@@ -194,7 +194,7 @@ def sine(prices, periods, method='difference'):
   results = holder()
   dict = {}
 
-  plot = True
+  plot = False
 
   #compute series coefficients
 
@@ -227,9 +227,9 @@ def sine(prices, periods, method='difference'):
       coeffs = np.append(coeffs, res[0], axis=0)
     warnings.filterwarnings('ignore', category=np.VisibleDeprecationWarning)
 
-    coeffs = np.array(coeffs).reshape(((len(coeffs)/3,3)))
+    coeffs = np.array(coeffs).reshape(((len(coeffs)//3,3)))
 
-    df = pd.DataFrame(coeffs, index=prices.iloc[periods[i]-periods[i]])
+    df = pd.DataFrame(coeffs, index=prices.iloc[periods[i]:-periods[i]])
 
     df.columns = ['a0', 'b1', 'w']
 
