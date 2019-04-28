@@ -498,3 +498,26 @@ def macd(prices, periods):
   results.signal = sigMACD
 
   return results
+
+# CCI (commodity CHannel Index) function
+def cci(prices, periods):
+  """
+  :param: prices: OHLC DataFrame of prices
+  :param: periods: periods for which to compute the data
+  :return: CCI for given periods
+  """
+  results = holder()
+  CCI = {}
+
+  for i in range(0, len(periods)):
+    MA = prices.close.rolling(periods[i]).mean()
+    std = prices.close.rolling(periods[i]).std()
+
+    D = (prices.close - MA)/std
+
+    CCI[periods[i]] = pd.DataFrame((prices.close-MA)/(0.015*D))
+    CCI[periods[i]].columns = ['close']
+  
+  results.cci = CCI
+
+  return results

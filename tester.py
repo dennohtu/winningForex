@@ -48,8 +48,10 @@ df = df.iloc[:200]
 #res = p.proc[30]
 #AD = adosc(df, [30])
 #res = AD.AD[30]
-mac = macd(df, [15,30])
-res = mac.signal
+#mac = macd(df, [15,30])
+#res = mac.signal
+c = cci(df, [30])
+res = c.cci[30]
 
 ##Plot the data
 ma = df.close.rolling(center=False, window=30).mean()
@@ -64,7 +66,8 @@ trace1 = go.Scatter(x=df.index, y=ma)
 #trace_will = go.Scatter(x=res.index, y=res.R)
 #trace_proc = go.Scatter(x=res.index, y=res.close)
 #trace_adosc = go.Scatter(x=res.index, y=res.AD)
-trace_test = go.Scatter(x=res.index, y=res.SL)
+#trace_macd = go.Scatter(x=res.index, y=res.SL)
+trace_test = go.Scatter(x=res.index, y=res.close)
 
 #plotly data to plot
 data = [trace0, trace1, trace_test]
