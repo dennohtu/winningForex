@@ -50,8 +50,14 @@ df = df.iloc[:200]
 #res = AD.AD[30]
 #mac = macd(df, [15,30])
 #res = mac.signal
-c = cci(df, [30])
-res = c.cci[30]
+#c = cci(df, [30])
+#res = c.cci[30]
+#bb = bollinger(df, [20], 2)
+#res = bb.bands[20]
+#pa = price_averages(df, [20])
+#res = pa.avs[20]
+sl = slopes(df, [20])
+res = sl.slope[20]
 
 ##Plot the data
 ma = df.close.rolling(center=False, window=30).mean()
@@ -67,7 +73,10 @@ trace1 = go.Scatter(x=df.index, y=ma)
 #trace_proc = go.Scatter(x=res.index, y=res.close)
 #trace_adosc = go.Scatter(x=res.index, y=res.AD)
 #trace_macd = go.Scatter(x=res.index, y=res.SL)
-trace_test = go.Scatter(x=res.index, y=res.close)
+#trace_cci = go.Scatter(x=res.index, y=res.close)
+#trace_bollinger = go.Scatter(x=res.index, y=res.upper)
+#trace_avs = go.Scatter(x=res.index, y=res.close)
+trace_test = go.Scatter(x=res.index, y=res.high)
 
 #plotly data to plot
 data = [trace0, trace1, trace_test]

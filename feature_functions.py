@@ -521,3 +521,74 @@ def cci(prices, periods):
   results.cci = CCI
 
   return results
+
+##Bollinger bands function
+def bollinger(prices, periods, deviations):
+  """
+  :param: prices: OHLC DataFrame of prices
+  :param: periods: periods for which to compute bollinger bands
+  :param: deviations: deviations to use when calculating bands (upper and lower)
+  :return: bollinger bands
+  """
+  results = holder()
+  boll = {}
+
+  for i in range(0, len(periods)):
+    mid = prices.close.rolling(periods[i]).mean()
+    std = prices.close.rolling(periods[i]).std()
+
+    upper = mid + deviations*std
+    lower = mid - deviations*std
+
+    df = pd.concat((upper, mid, lower), axis=1)
+    df.columns = ['upper', 'mid', 'lower']
+
+    boll[periods[i]] = df
+  results.bands = boll
+
+  return results
+
+#Price averages
+def price_averages(prices, periods):
+  """
+  :param: prices: OHLC DataFrame of prices
+  :param: periods: periods for which to compute indicator values
+  :return: averages over given time periods
+  """
+  results = holder()
+  avs = {}
+
+  for i in range(0, len(periods)):
+    avs[periods[i]] = pd.DataFrame(prices[['open','high','low','close']].rolling(periods[i]).mean())
+  results.avs = avs
+
+  return results
+
+#Slope function
+def slopes(prices, periods):
+  """
+  :param: prices: OHLC DataFrame of prices
+  :param: periods: periods for which to compute indicator values
+  :return: slopes over given time periods
+  """
+  results = holder()
+  slope = {}
+
+  for i in range(0, len(periods)):
+    ms = []
+    for j in range(periods[i], len(prices)-periods[i]):
+      y = prices.high.iloc[j-periods[i]:j].values
+      x = np.arange(0, len(y))
+
+      res = stats.linregress(x,y=y)
+      m = res.slope
+
+      ms = np.append(ms,m)
+
+    ms = pd.DataFrame(ms,index=prices.iloc[periods[i]:-periods[i]].index)
+    ms.columns = ['high']
+
+    slope[periods[i]] = ms
+  
+  results.slope = slope
+  return results
